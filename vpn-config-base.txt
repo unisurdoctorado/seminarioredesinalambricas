@@ -1,0 +1,39 @@
+configure terminal
+crypto isakmp policy 1
+authentication pre-share
+encryption aes 128
+group 2
+lifetime 86400
+exit
+crypto ipsec transform-set OFICINAREMOTA esp-aes esp-sha-hmac
+access-list 101 permit ip 172.20.1.0 0.0.0.128 172.20.1.128 0.0.0.64
+crypto map TUXTLAtoOFICINAREMOTA 10 ipsec-isakmp
+set peer 10.0.0.5
+match address 101
+set transform-set OFICINAREMOTA
+exit
+interface fastethernet0/1
+crypto map TUXTLAtoOFICINAREMOTA
+exit
+ip route 172.20.1.128 255.255.255.192 10.0.0.5
+exit
+
+configure terminal
+crypto isakmp policy 1
+authentication pre-share
+encryption aes 128
+group 2
+lifetime 86400
+exit
+crypto ipsec transform-set TUXTLA esp-aes esp-sha-hmac
+access-list 101 permit ip 172.20.1.128 0.0.0.64 172.20.1.0 0.0.0.128
+crypto map OFICINAREMOTAtoTUXTLA 10 ipsec-isakmp
+set peer 10.0.0.1
+match address 101
+set transform-set TUXTLA
+exit
+interface fastethernet0/1
+crypto map OFICINAREMOTAtoTUXTLA
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.1
+exit
