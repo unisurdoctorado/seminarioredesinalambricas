@@ -1,0 +1,562 @@
+#TUXTLA
+enable
+config terminal
+hostname TUXTLA
+interface fa0/0
+ip address 172.20.1.126 255.255.255.128
+no shutdown
+interface fa0/1
+ip address 10.0.0.1 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-TUXTLA
+default-router 172.20.1.126
+network 172.20.1.0 255.255.255.128
+exit
+interface Tunnel1
+ip address 172.20.255.241 255.255.255.252
+tunnel source FastEthernet0/1
+tunnel destination 10.0.0.5
+exit
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+router ospf 1
+network 172.20.255.240 255.255.255.252 area 0
+network 172.20.1.0 255.255.255.128 area 0
+exit
+crypto isakmp policy 10
+encryption aes
+hash sha
+authentication pre-share
+group 1
+exit
+crypto isakmp key secret address 10.0.0.5
+crypto ipsec transform-set myset esp-aes esp-sha-hmac
+crypto map mymap 10 ipsec-isakmp
+set peer 10.0.0.5
+set transform-set myset
+match address 100
+exit
+access-list 100 permit gre any any
+interface FastEthernet0/1
+crypto map mymap
+exit
+
+interface Tunnel2
+ip address 172.20.255.246 255.255.255.252
+no shutdown
+tunnel source FastEthernet0/1
+tunnel destination 10.0.0.9
+exit
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+router ospf 1
+network 172.20.255.244 255.255.255.252 area 0
+network 172.20.1.0 255.255.255.128 area 0
+exit
+crypto isakmp policy 11
+encryption aes
+hash sha
+authentication pre-share
+group 1
+exit
+crypto isakmp key secret address 10.0.0.9
+crypto ipsec transform-set myset esp-aes esp-sha-hmac
+crypto map mymap 11 ipsec-isakmp
+set peer 10.0.0.9
+set transform-set myset
+match address 100
+exit
+access-list 100 permit gre any any
+interface FastEthernet0/1
+crypto map mymap
+exit
+--------------------------------------------------
+#TERAN
+enable
+config terminal
+hostname TERAN
+interface fa0/0
+ip address 172.20.1.190 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.5 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-TERAN
+default-router 172.20.1.190
+network 172.20.1.128 255.255.255.192
+exit
+interface Tunnel1
+ip address 172.20.255.242 255.255.255.252
+no shutdown
+tunnel source FastEthernet0/1
+tunnel destination 10.0.0.1
+exit
+ip route 10.0.0.0 255.255.255.252 10.0.0.6
+router ospf 1
+network 172.20.255.240 255.255.255.252 area 0
+network 172.20.1.128 255.255.255.192 area 0
+exit
+crypto isakmp policy 10
+encryption aes
+hash sha
+authentication pre-share
+group 1
+exit
+crypto isakmp key secret address 10.0.0.1
+crypto ipsec transform-set myset esp-aes esp-sha-hmac
+crypto map mymap 10 ipsec-isakmp
+set peer 10.0.0.1
+set transform-set myset
+match address 100
+exit
+access-list 100 permit gre any any
+interface FastEthernet0/1
+crypto map mymap
+exit
+do write
+
+#CHIAPA DE CORZO
+enable
+config terminal
+hostname CORZO
+interface fa0/0
+ip address 172.20.1.254 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.9 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-CORZO
+default-router 172.20.1.254
+network 172.20.1.192 255.255.255.192
+exit
+
+interface Tunnel1
+ip address 172.20.255.245 255.255.255.252
+no shutdown
+tunnel source FastEthernet0/1
+tunnel destination 10.0.0.1
+exit
+ip route 10.0.0.0 255.255.255.252 10.0.0.10
+router ospf 1
+network 172.20.255.244 255.255.255.252 area 0
+network 172.20.1.192 255.255.255.192 area 0
+exit
+crypto isakmp policy 11
+encryption aes
+hash sha
+authentication pre-share
+group 1
+exit
+crypto isakmp key secret address 10.0.0.1
+crypto ipsec transform-set myset esp-aes esp-sha-hmac
+crypto map mymap 11 ipsec-isakmp
+set peer 10.0.0.1
+set transform-set myset
+match address 100
+exit
+access-list 100 permit gre any any
+interface FastEthernet0/1
+crypto map mymap
+exit
+
+#XOCHIMILCO
+enable
+config terminal
+hostname XOCHIMILCO
+interface fa0/0
+ip address 172.20.4.62 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.13 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-XOCHIMILCO
+default-router 172.20.4.62
+network 172.20.4.0 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.14
+ip route 172.20.1.128 255.255.255.192 10.0.0.14
+ip route 172.20.1.192 255.255.255.192 10.0.0.14
+ip route 172.20.4.64 255.255.255.192 10.0.0.14
+ip route 172.20.8.0 255.255.255.192 10.0.0.14
+ip route 172.20.12.0 255.255.255.192 10.0.0.14
+ip route 172.20.16.0 255.255.255.192 10.0.0.14
+ip route 172.20.16.64 255.255.255.192 10.0.0.14
+ip route 172.20.20.0 255.255.255.192 10.0.0.14
+ip route 172.20.20.64 255.255.255.192 10.0.0.14
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#5 DE FEBRERO
+enable
+config terminal
+hostname 5FEBRERO
+interface fa0/0
+ip address 172.20.4.126 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.17 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-5FEBRERO
+default-router 172.20.4.126
+network 172.20.4.64 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.18
+ip route 172.20.1.128 255.255.255.192 10.0.0.18
+ip route 172.20.1.192 255.255.255.192 10.0.0.18
+ip route 172.20.4.0 255.255.255.192 10.0.0.18
+ip route 172.20.8.0 255.255.255.192 10.0.0.18
+ip route 172.20.12.0 255.255.255.192 10.0.0.18
+ip route 172.20.16.0 255.255.255.192 10.0.0.18
+ip route 172.20.16.64 255.255.255.192 10.0.0.18
+ip route 172.20.20.0 255.255.255.192 10.0.0.18
+ip route 172.20.20.64 255.255.255.192 10.0.0.18
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#PALENQUE
+enable
+config terminal
+hostname PALENQUE
+interface fa0/0
+ip address 172.20.8.62 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.21 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-PALENQUE
+default-router 172.20.8.62
+network 172.20.8.0 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.22
+ip route 172.20.1.128 255.255.255.192 10.0.0.22
+ip route 172.20.1.192 255.255.255.192 10.0.0.22
+ip route 172.20.4.0 255.255.255.192 10.0.0.22
+ip route 172.20.4.64 255.255.255.192 10.0.0.22
+ip route 172.20.12.0 255.255.255.192 10.0.0.22
+ip route 172.20.16.0 255.255.255.192 10.0.0.22
+ip route 172.20.16.64 255.255.255.192 10.0.0.22
+ip route 172.20.20.0 255.255.255.192 10.0.0.22
+ip route 172.20.20.64 255.255.255.192 10.0.0.22
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#COMITAN
+enable
+config terminal
+hostname COMITAN
+interface fa0/0
+ip address 172.20.12.62 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.25 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-COMITAN
+default-router 172.20.12.62
+network 172.20.12.0 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.26
+ip route 172.20.1.128 255.255.255.192 10.0.0.26
+ip route 172.20.1.192 255.255.255.192 10.0.0.26
+ip route 172.20.4.0 255.255.255.192 10.0.0.26
+ip route 172.20.4.64 255.255.255.192 10.0.0.26
+ip route 172.20.8.0 255.255.255.192 10.0.0.26
+ip route 172.20.16.0 255.255.255.192 10.0.0.26
+ip route 172.20.16.64 255.255.255.192 10.0.0.26
+ip route 172.20.20.0 255.255.255.192 10.0.0.26
+ip route 172.20.20.64 255.255.255.192 10.0.0.26
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#SALINA CRUZ
+enable
+config terminal
+hostname SALINACRUZ
+interface fa0/0
+ip address 172.20.16.62 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.29 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-SALINACRUZ
+default-router 172.20.16.62
+network 172.20.16.0 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.30
+ip route 172.20.1.128 255.255.255.192 10.0.0.30
+ip route 172.20.1.192 255.255.255.192 10.0.0.30
+ip route 172.20.4.0 255.255.255.192 10.0.0.30
+ip route 172.20.4.64 255.255.255.192 10.0.0.30
+ip route 172.20.8.0 255.255.255.192 10.0.0.30
+ip route 172.20.12.0 255.255.255.192 10.0.0.30
+ip route 172.20.16.64 255.255.255.192 10.0.0.30
+ip route 172.20.20.0 255.255.255.192 10.0.0.30
+ip route 172.20.20.64 255.255.255.192 10.0.0.30
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#OAXACA
+enable
+config terminal
+hostname OAXACA
+interface fa0/0
+ip address 172.20.16.126 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.33 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-OAXACA
+default-router 172.20.16.126
+network 172.20.16.64 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.34
+ip route 172.20.1.128 255.255.255.192 10.0.0.34
+ip route 172.20.1.192 255.255.255.192 10.0.0.34
+ip route 172.20.4.0 255.255.255.192 10.0.0.34
+ip route 172.20.4.64 255.255.255.192 10.0.0.34
+ip route 172.20.8.0 255.255.255.192 10.0.0.34
+ip route 172.20.12.0 255.255.255.192 10.0.0.34
+ip route 172.20.16.0 255.255.255.192 10.0.0.34
+ip route 172.20.20.0 255.255.255.192 10.0.0.34
+ip route 172.20.20.64 255.255.255.192 10.0.0.34
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#VILLAHERMOSA
+enable
+config terminal
+hostname VILLAHERMOSA
+interface fa0/0
+ip address 172.20.20.62 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.37 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-VILLAHERMOSA
+default-router 172.20.20.62
+network 172.20.20.0 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.38
+ip route 172.20.1.128 255.255.255.192 10.0.0.38
+ip route 172.20.1.192 255.255.255.192 10.0.0.38
+ip route 172.20.4.0 255.255.255.192 10.0.0.38
+ip route 172.20.4.64 255.255.255.192 10.0.0.38
+ip route 172.20.8.0 255.255.255.192 10.0.0.38
+ip route 172.20.12.0 255.255.255.192 10.0.0.38
+ip route 172.20.16.0 255.255.255.192 10.0.0.38
+ip route 172.20.16.64 255.255.255.192 10.0.0.38
+ip route 172.20.20.64 255.255.255.192 10.0.0.38
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.40 255.255.255.252 10.0.0.2
+do write
+
+#NACAJUCA
+enable
+config terminal
+hostname NACAJUCA
+interface fa0/0
+ip address 172.20.20.126 255.255.255.192
+no shutdown
+interface fa0/1
+ip address 10.0.0.41 255.255.255.252
+no shutdown
+exit
+ip dhcp pool LAN-NACAJUCA
+default-router 172.20.20.126
+network 172.20.20.64 255.255.255.192
+exit
+ip route 172.20.1.0 255.255.255.128 10.0.0.42
+ip route 172.20.1.128 255.255.255.192 10.0.0.42
+ip route 172.20.1.192 255.255.255.192 10.0.0.42
+ip route 172.20.4.0 255.255.255.192 10.0.0.42
+ip route 172.20.4.64 255.255.255.192 10.0.0.42
+ip route 172.20.8.0 255.255.255.192 10.0.0.42
+ip route 172.20.12.0 255.255.255.192 10.0.0.42
+ip route 172.20.16.0 255.255.255.192 10.0.0.42
+ip route 172.20.16.64 255.255.255.192 10.0.0.42
+ip route 172.20.20.0 255.255.255.192 10.0.0.42
+ip route 10.0.0.0 255.255.255.252 10.0.0.2
+ip route 10.0.0.4 255.255.255.252 10.0.0.2
+ip route 10.0.0.8 255.255.255.252 10.0.0.2
+ip route 10.0.0.12 255.255.255.252 10.0.0.2
+ip route 10.0.0.16 255.255.255.252 10.0.0.2
+ip route 10.0.0.20 255.255.255.252 10.0.0.2
+ip route 10.0.0.24 255.255.255.252 10.0.0.2
+ip route 10.0.0.28 255.255.255.252 10.0.0.2
+ip route 10.0.0.32 255.255.255.252 10.0.0.2
+ip route 10.0.0.36 255.255.255.252 10.0.0.2
+do write
+
+#INTERNET
+enable
+configure terminal
+hostname INTERNET
+interface Vlan1
+description toTUXTLA
+ip address 10.0.0.2 255.255.255.252
+exit
+interface fa1/0
+description toTUXTLA
+switchport access vlan 1
+no shutdown
+exit
+interface Vlan2
+description toTERAN
+ip address 10.0.0.6 255.255.255.252
+exit
+interface fa1/1
+description toTERAN
+switchport access vlan 2
+no shutdown
+exit
+interface Vlan3
+description toCORZO
+ip address 10.0.0.10 255.255.255.252
+exit
+interface fa1/2
+description toCORZO
+switchport access vlan 3
+no shutdown
+exit
+interface Vlan4
+description toXOCHI
+ip address 10.0.0.14 255.255.255.252
+exit
+interface fa1/3
+description toXOCHI
+switchport access vlan 4
+no shutdown
+exit
+interface Vlan5
+description to5FEB
+ip address 10.0.0.18 255.255.255.252
+exit
+interface fa1/4
+description to5FEB
+switchport access vlan 5
+no shutdown
+exit
+interface Vlan6
+description toPALENQUE
+ip address 10.0.0.22 255.255.255.252
+exit
+interface fa1/5
+description toPALENQUE
+switchport access vlan 6
+no shutdown
+exit
+interface Vlan7
+description toCOMITAN
+ip address 10.0.0.26 255.255.255.252
+exit
+interface fa1/6
+description toCOMITAN
+switchport access vlan 7
+no shutdown
+exit
+interface Vlan8
+description toSCRUZ
+ip address 10.0.0.30 255.255.255.252
+exit
+interface fa1/7
+description toSCRUZ
+switchport access vlan 8
+no shutdown
+exit
+interface Vlan9
+description toOAXACA
+ip address 10.0.0.34 255.255.255.252
+exit
+interface fa1/8
+description toOAXACA
+switchport access vlan 9
+no shutdown
+exit
+interface Vlan10
+description toVILLA
+ip address 10.0.0.38 255.255.255.252
+exit
+interface fa1/9
+description toVILLA
+switchport access vlan 10
+no shutdown
+exit
+interface Vlan11
+description toNACAJUCA
+ip address 10.0.0.42 255.255.255.252
+exit
+interface fa1/10
+description toNACAJUCA
+switchport access vlan 11
+no shutdown
+exit
+do write
